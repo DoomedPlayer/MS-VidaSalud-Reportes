@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "kpi_atenciones_diarias")
+@Table(name = "kpi_atenciones")
 public class KpiAtenciones {
 
     @Id
