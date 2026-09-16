@@ -32,6 +32,7 @@ public class AtencionEventDto {
         this.prestacionId = prestacionId;
         this.cupoId = cupoId;
         this.estado = estado;
+        
     }
     
     public String getType() { return type; }
