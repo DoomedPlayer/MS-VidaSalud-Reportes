@@ -19,7 +19,7 @@ public class KafkaConsumerConfig {
     private static final Logger log = LoggerFactory.getLogger(KafkaConsumerConfig.class);
 
     @Bean
-    public DeadLetterPublishingRecoverer deadLetterPublishingRecoverer(KafkaTemplate<String, String> kafkaTemplate) {
+    public DeadLetterPublishingRecoverer deadLetterPublishingRecoverer(KafkaTemplate<?, ?> kafkaTemplate) {
         return new DeadLetterPublishingRecoverer(kafkaTemplate, (record, ex) -> {
             String dltTopic = record.topic() + ".DLT";
             log.error("🚨 [Reportes] Mensaje fallido tras reintentos. Enviando a DLT '{}' | Key: {} | Error: {}",

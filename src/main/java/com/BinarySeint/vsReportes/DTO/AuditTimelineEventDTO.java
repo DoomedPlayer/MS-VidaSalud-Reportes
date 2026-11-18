@@ -3,6 +3,7 @@ package com.BinarySeint.vsReportes.DTO;
 import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AuditTimelineEventDTO {
 
     private String eventId;
