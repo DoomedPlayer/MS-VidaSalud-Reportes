@@ -19,64 +19,35 @@ public class KpiAtenciones {
     private Integer atencionesEnEspera = 0;
     private Integer atencionesCerradas = 0;
     private Integer atencionesCanceladas = 0;
-    
+
     private Double tiempoPromedioEsperaMinutos = 0.0;
+    private Integer cantidadMedicionesEspera = 0;
 
+    public KpiAtenciones() {}
 
-    public KpiAtenciones(){}
-    public KpiAtenciones(Long id, LocalDate fecha, Integer atencionSol,Integer atencionCon,Integer atencionesEsp,Integer atencionCerr,Integer antencionCan, Double tiempoEsp){
-        this.id=id;
-        this.fecha=fecha;
-        this.atencionesSolicitadas=atencionSol;
-        this.atencionesConfirmadas=atencionCon;
-        this.atencionesCerradas=atencionCerr;
-        this.atencionesCanceladas=antencionCan;
-        this.tiempoPromedioEsperaMinutos=tiempoEsp;
-    }
+    public Long getId() { return id; }
 
-    public Long getId(){
-        return id;
-    }
-    public LocalDate getFecha(){
-        return fecha;
-    }
-    public void setFecha(LocalDate fecha){
-        this.fecha=fecha;
-    }
-    public Integer getAtencionesSolicitadas(){
-        return atencionesSolicitadas;
-    }
-    public void setAtencionesSolicitadas(Integer atencionSol){
-        this.atencionesSolicitadas=atencionSol;
-    }
-    public Integer getAtencionesEnEspera(){
-        return atencionesEnEspera;
-    }
-    public void setAtencionesEnEspera(Integer atencionEsp){
-        this.atencionesEnEspera=atencionEsp;
-    }
-    public Integer getAtencionesConfirmadas(){
-        return atencionesConfirmadas;
-    }
-    public void setAtencionesConfirmadas(Integer atencionCon){
-        this.atencionesConfirmadas=atencionCon;
-    }
-    public Integer getAtencionesCerradas(){
-        return atencionesCerradas;
-    }
-    public void setAtencionesCerradas(Integer atencionCerr){
-        this.atencionesCerradas=atencionCerr;
-    }
-    public Integer getAtencionesCanceladas(){
-        return atencionesCanceladas;
-    }
-    public void setAtencionesCanceladas(Integer atencionCan){
-        this.atencionesCanceladas=atencionCan;
-    }
-    public Double getTiempoPromedioEsperaMinutos(){
-        return tiempoPromedioEsperaMinutos;
-    }
-    public void setTiempoPromedioEsperaMinutos(Double tiempoEsp){
-        this.tiempoPromedioEsperaMinutos=tiempoEsp;
-    }
+    public LocalDate getFecha() { return fecha; }
+    public void setFecha(LocalDate fecha) { this.fecha = fecha; }
+
+    public Integer getAtencionesSolicitadas() { return atencionesSolicitadas; }
+    public void setAtencionesSolicitadas(Integer atencionesSolicitadas) { this.atencionesSolicitadas = atencionesSolicitadas; }
+
+    public Integer getAtencionesConfirmadas() { return atencionesConfirmadas; }
+    public void setAtencionesConfirmadas(Integer atencionesConfirmadas) { this.atencionesConfirmadas = atencionesConfirmadas; }
+
+    public Integer getAtencionesEnEspera() { return atencionesEnEspera; }
+    public void setAtencionesEnEspera(Integer atencionesEnEspera) { this.atencionesEnEspera = atencionesEnEspera; }
+
+    public Integer getAtencionesCerradas() { return atencionesCerradas; }
+    public void setAtencionesCerradas(Integer atencionesCerradas) { this.atencionesCerradas = atencionesCerradas; }
+
+    public Integer getAtencionesCanceladas() { return atencionesCanceladas; }
+    public void setAtencionesCanceladas(Integer atencionesCanceladas) { this.atencionesCanceladas = atencionesCanceladas; }
+
+    public Double getTiempoPromedioEsperaMinutos() { return tiempoPromedioEsperaMinutos; }
+    public void setTiempoPromedioEsperaMinutos(Double tiempoPromedioEsperaMinutos) { this.tiempoPromedioEsperaMinutos = tiempoPromedioEsperaMinutos; }
+
+    public Integer getCantidadMedicionesEspera() { return cantidadMedicionesEspera; }
+    public void setCantidadMedicionesEspera(Integer cantidadMedicionesEspera) { this.cantidadMedicionesEspera = cantidadMedicionesEspera; }
 }
