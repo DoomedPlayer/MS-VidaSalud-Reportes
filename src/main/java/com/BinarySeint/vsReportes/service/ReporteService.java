@@ -3,6 +3,7 @@ package com.BinarySeint.vsReportes.service;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ import com.BinarySeint.vsReportes.repository.TiempoEsperaRepository;
 public class ReporteService {
 
     private static final Logger log = LoggerFactory.getLogger(ReporteService.class);
+    private static final ZoneId ZONA_CHILE = ZoneId.of("America/Santiago");
 
     private final KpiAtencionesRepository kpiRepository;
     private final PrestacionDemandaRepository demandaRepository;
@@ -51,7 +53,9 @@ public class ReporteService {
             return;
         }
 
-        LocalDateTime fechaEvento = evento.getTimestamp() != null ? evento.getTimestamp() : LocalDateTime.now();
+        LocalDateTime fechaEvento = evento.getTimestamp() != null
+                ? evento.getTimestamp()
+                : LocalDateTime.now(ZONA_CHILE);
         LocalDate dia = fechaEvento.toLocalDate();
 
         KpiAtenciones kpi = kpiRepository.findByFecha(dia).orElseGet(() -> {
@@ -72,6 +76,10 @@ public class ReporteService {
                 demanda.setCantidadSolicitudes(demanda.getCantidadSolicitudes() + 1);
                 demandaRepository.save(demanda);
             }
+            // Marca punto de partida de espera por si la cita pasa directo a EN_ATENCION o CERRADA
+            if (!tiempoEsperaRepository.existsById(evento.getAppointmentId())) {
+                tiempoEsperaRepository.save(new TiempoEsperaRegistro(evento.getAppointmentId(), fechaEvento));
+            }
         }
 
         switch (estadoActual) {
@@ -84,6 +92,7 @@ public class ReporteService {
 
             case "EN_ESPERA":
                 kpi.setAtencionesEnEspera(kpi.getAtencionesEnEspera() + 1);
+                // Reinicia el inicio de espera al momento exacto en que el paciente llega a sala
                 tiempoEsperaRepository.save(new TiempoEsperaRegistro(evento.getAppointmentId(), fechaEvento));
                 break;
 
@@ -96,6 +105,10 @@ public class ReporteService {
 
             case "CERRADA":
                 kpi.setAtencionesCerradas(kpi.getAtencionesCerradas() + 1);
+                actualizarTiempoEspera(kpi, evento.getAppointmentId(), fechaEvento);
+                if (evento.getPrestacionId() != null && !demandaRepository.existsById(evento.getPrestacionId())) {
+                    demandaRepository.save(new PrestacionDemanda(evento.getPrestacionId(), 1L));
+                }
                 break;
 
             case "CANCELADA":
@@ -112,7 +125,7 @@ public class ReporteService {
         kpiRepository.save(kpi);
 
         if (evento.getEventId() != null) {
-            eventoProcesadoRepository.save(new EventoProcesadoReport(evento.getEventId(), "appointments.events", LocalDateTime.now()));
+            eventoProcesadoRepository.save(new EventoProcesadoReport(evento.getEventId(), "appointments.events", LocalDateTime.now(ZONA_CHILE)));
         }
 
         log.info("📊 KPIs actualizados para fecha {} | Cita ID: {} | Estado: {}",
@@ -130,7 +143,7 @@ public class ReporteService {
         }
 
         if (evento.getEventId() != null) {
-            eventoProcesadoRepository.save(new EventoProcesadoReport("AUDIT-" + evento.getEventId(), "audit.timeline", LocalDateTime.now()));
+            eventoProcesadoRepository.save(new EventoProcesadoReport("AUDIT-" + evento.getEventId(), "audit.timeline", LocalDateTime.now(ZONA_CHILE)));
         }
 
         log.info("📈 Traza operativa registrada en analítica [Usuario: {} | Acción: {} | Cita ID: {}]",
