@@ -62,16 +62,20 @@ public class ReporteService {
 
         String estadoActual = evento.getEstadoActual().toUpperCase();
         String estadoAnterior = evento.getEstadoAnterior() != null ? evento.getEstadoAnterior().toUpperCase() : "";
+        boolean esCitaNueva = estadoAnterior.isBlank();
+
+        if (esCitaNueva && !"CANCELADA".equals(estadoActual)) {
+            kpi.setAtencionesSolicitadas(kpi.getAtencionesSolicitadas() + 1);
+            if (evento.getPrestacionId() != null) {
+                PrestacionDemanda demanda = demandaRepository.findById(evento.getPrestacionId())
+                        .orElse(new PrestacionDemanda(evento.getPrestacionId(), 0L));
+                demanda.setCantidadSolicitudes(demanda.getCantidadSolicitudes() + 1);
+                demandaRepository.save(demanda);
+            }
+        }
 
         switch (estadoActual) {
             case "SOLICITADA":
-                kpi.setAtencionesSolicitadas(kpi.getAtencionesSolicitadas() + 1);
-                if (evento.getPrestacionId() != null) {
-                    PrestacionDemanda demanda = demandaRepository.findById(evento.getPrestacionId())
-                            .orElse(new PrestacionDemanda(evento.getPrestacionId(), 0L));
-                    demanda.setCantidadSolicitudes(demanda.getCantidadSolicitudes() + 1);
-                    demandaRepository.save(demanda);
-                }
                 break;
 
             case "CONFIRMADA":

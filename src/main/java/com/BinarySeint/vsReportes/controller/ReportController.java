@@ -26,7 +26,7 @@ public class ReportController {
 
     @GetMapping("/kpis/today")
     public ResponseEntity<KpiAtenciones> getKpisToday() {
-        Optional<KpiAtenciones> kpi = kpiRepository.findByFecha(LocalDate.now());
+        Optional<KpiAtenciones> kpi = kpiRepository.findByFecha(LocalDate.now(java.time.ZoneId.of("America/Santiago")));
         return kpi.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
     }
 
